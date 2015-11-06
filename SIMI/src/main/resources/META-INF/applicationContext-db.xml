@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+- Author   : Dynastymasra
+- Name     : Dimas Ragil T
+- Email    : dynastymasra@gmail.com
+- LinkedIn : http://www.linkedin.com/in/dynastymasra
+- Blogspot : dynastymasra.wordpress.com | dynastymasra.blogspot.com
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--scanning konfigurasi koneksi ke database-->
+    <context:property-placeholder location="classpath:META-INF/jdbc.properties"/>
+    <!--scanning class dao atau service-->
+    <context:component-scan base-package="com.dynastymasra.spring.service.impl"/>
+    <!--mendifinisikan class DataSource yang digunakan untuk mengakses ke database-->
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close"
+          p:driverClassName="${jdbc.driver}"
+          p:url="${jdbc.url}"
+          p:username="${jdbc.username}"
+          p:password="${jdbc.password}"
+          p:maxWait="40000"
+          p:maxActive="80"
+          p:maxIdle="20"/>
+
+    <!--mendefinisikan entity manager, yang digunakan untuk melakukan query Object Relational Mapping-->
+    <bean id="entityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" p:dataSource-ref="dataSource">
+        <property name="packagesToScan" value="com.dynastymasra.spring.domain"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--transaction manager-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" p:entityManagerFactory-ref="entityManager"/>
+</beans>
