@@ -6,7 +6,7 @@
     <!-- The datasource is deployed as WEB-INF/spring-quickstart-ds.xml, you
          can find it in the source at src/main/webapp/WEB-INF/spring-quickstart-ds.xml -->
     <jta-data-source>java:jboss/datasources/SpringQuickstartDS</jta-data-source>
-    <class>com.mutia.simi.domain.user</class>
+    <class>com.mutia.simi.domain.User</class>
     <properties>
       <property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/spring-quickstart/persistence"/>
       <!-- Properties for Hibernate -->
